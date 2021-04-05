@@ -622,7 +622,7 @@ case $COMMAND in
         fi
 	
 	export VOLPERCENT
-	python3 nextalbum.py
+	python3 nextalbum.py next
 
         ;;
     playerrandomalbum)
@@ -648,7 +648,7 @@ case $COMMAND in
         fi
 	
 	export VOLPERCENT
-	python3 nextalbum.py
+	python3 nextalbum.py random
 
         ;;
     playerprev)
@@ -908,6 +908,17 @@ case $COMMAND in
         if [ "${DEBUG_playout_controls_sh}" == "TRUE" ]; then echo "mpc load "${VALUE//\//SLASH}" && ${PATHDATA}/resume_play.sh -c=resume -d="${FOLDER}"" >> ${PATHDATA}/../logs/debug.log; fi
         ${PATHDATA}/resume_play.sh -c=resume -d="${FOLDER}"
 
+    	if [ "${VOLUMEMANAGER}" == "amixer" ]; then
+            # volume handling alternative with amixer not mpd (2020-06-12 related to ticket #973)
+            VOLPERCENT=`amixer sget \'$AUDIOIFACENAME\' | grep -Po -m 1 '(?<=\[)[^]]*(?=%])'`
+        else
+            # manage volume with mpd
+            VOLPERCENT=$(echo -e status\\nclose | nc -w 1 localhost 6600 | grep -o -P '(?<=volume: ).*')
+        fi
+	
+	    export VOLPERCENT
+	    python3 playalbum.py
+ 
         # write latest folder played to settings file
         sudo echo ${FOLDER} > ${PATHDATA}/../settings/Latest_Folder_Played
         sudo chown pi:www-data ${PATHDATA}/../settings/Latest_Folder_Played
