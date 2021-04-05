@@ -40,6 +40,8 @@ NOW=`date +%Y-%m-%d.%H:%M:%S`
 # playerstop
 # playerstopafter
 # playernext
+# playernextalbum
+# playerrandomalbum
 # playerprev
 # playernextchapter
 # playerprevchapter
@@ -596,6 +598,58 @@ case $COMMAND in
         fi
 
         mpc next
+        ;;
+    playernextalbum)
+        # play next track in playlist (==folder)
+        # Unmute if muted
+        if [ -f $VOLFILE ]; then
+            # $VOLFILE DOES exist == audio off
+            # read volume level from $VOLFILE and set as percent
+            echo -e setvol `<$VOLFILE`\\nclose | nc -w 1 localhost 6600
+            # volume handling alternative with amixer not mpd (2020-06-12 related to ticket #973)
+
+            # amixer sset \'$AUDIOIFACENAME\' `<$VOLFILE`%
+            # delete $VOLFILE
+            rm -f $VOLFILE
+        fi
+	
+	if [ "${VOLUMEMANAGER}" == "amixer" ]; then
+            # volume handling alternative with amixer not mpd (2020-06-12 related to ticket #973)
+            VOLPERCENT=`amixer sget \'$AUDIOIFACENAME\' | grep -Po -m 1 '(?<=\[)[^]]*(?=%])'`
+        else
+            # manage volume with mpd
+            VOLPERCENT=$(echo -e status\\nclose | nc -w 1 localhost 6600 | grep -o -P '(?<=volume: ).*')
+        fi
+	
+	export VOLPERCENT
+	python3 nextalbum.py
+
+        ;;
+    playerrandomalbum)
+        # play next track in playlist (==folder)
+        # Unmute if muted
+        if [ -f $VOLFILE ]; then
+            # $VOLFILE DOES exist == audio off
+            # read volume level from $VOLFILE and set as percent
+            echo -e setvol `<$VOLFILE`\\nclose | nc -w 1 localhost 6600
+            # volume handling alternative with amixer not mpd (2020-06-12 related to ticket #973)
+
+            # amixer sset \'$AUDIOIFACENAME\' `<$VOLFILE`%
+            # delete $VOLFILE
+            rm -f $VOLFILE
+        fi
+	
+	if [ "${VOLUMEMANAGER}" == "amixer" ]; then
+            # volume handling alternative with amixer not mpd (2020-06-12 related to ticket #973)
+            VOLPERCENT=`amixer sget \'$AUDIOIFACENAME\' | grep -Po -m 1 '(?<=\[)[^]]*(?=%])'`
+        else
+            # manage volume with mpd
+            VOLPERCENT=$(echo -e status\\nclose | nc -w 1 localhost 6600 | grep -o -P '(?<=volume: ).*')
+        fi
+	
+	export VOLPERCENT
+	python3 nextalbum.py
+
         ;;
     playerprev)
         # play previous track in playlist (==folder)

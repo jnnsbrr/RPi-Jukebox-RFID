@@ -35,6 +35,20 @@ if(isset($_POST['secondSwipe']) && trim($_POST['secondSwipe']) != "") {
             print $exec;
         } 
         exec($exec);
+    } elseif(trim($_POST['secondSwipe']) == "SKIPNEXTALBUM") {
+        $Second_Swipe = "SKIPNEXTALBUM";
+        $exec = 'echo "'.$Second_Swipe.'" > '.$conf['settings_abs'].'/Second_Swipe';
+        if($debug == "true") {
+            print $exec;
+        } 
+        exec($exec);
+    } elseif(trim($_POST['secondSwipe']) == "SKIPRANDOMALBUM") {
+        $Second_Swipe = "SKIPRANDOMALBUM";
+        $exec = 'echo "'.$Second_Swipe.'" > '.$conf['settings_abs'].'/Second_Swipe';
+        if($debug == "true") {
+            print $exec;
+        } 
+        exec($exec);
     } elseif(trim($_POST['secondSwipe']) == "NOAUDIOPLAY") {
         $Second_Swipe = "NOAUDIOPLAY";
         $exec = 'echo "'.$Second_Swipe.'" > '.$conf['settings_abs'].'/Second_Swipe';
@@ -82,6 +96,20 @@ if(isset($_POST['secondSwipe']) && trim($_POST['secondSwipe']) != "") {
                             print " selected";
                         }
                         print ">".$lang['settingsSecondSwipeSkipnext'];
+                        print "</option>\n";
+                        print "
+                        <option value='SKIPNEXTALBUM'";
+                        if($Second_Swipe == "SKIPNEXTALBUM") {
+                            print " selected";
+                        }
+                        print ">".$lang['settingsSecondSwipeSkipnextalbum'];
+                        print "</option>\n";
+                        print "
+                        <option value='SKIPRANDOMALBUM'";
+                        if($Second_Swipe == "SKIPRANDOMALBUM") {
+                            print " selected";
+                        }
+                        print ">".$lang['settingsSecondSwipeSkiprandomalbum'];
                         print "</option>\n";
                         print "
                         <option value='NOAUDIOPLAY'";

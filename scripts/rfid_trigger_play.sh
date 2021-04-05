@@ -427,6 +427,17 @@ if [ ! -z "$FOLDER" -a ! -z ${FOLDER+x} -a -d "${AUDIOFOLDERSPATH}/${FOLDER}" ];
             # We will not play the playlist but skip to the next track:
             PLAYPLAYLIST=skipnext
             if [ "${DEBUG_rfid_trigger_play_sh}" == "TRUE" ]; then echo "  Completed: skip next track" >> $PATHDATA/../logs/debug.log; fi
+        elif [ "$SECONDSWIPE" == "SKIPNEXTALBUM" ]
+        then
+            # We will not play the playlist but skip to the next track:
+            PLAYPLAYLIST=skipnextalbum
+            if [ "${DEBUG_rfid_trigger_play_sh}" == "TRUE" ]; then echo "  Completed: skip next album" >> $PATHDATA/../logs/debug.log; fi
+ 	    elif [ "$SECONDSWIPE" == "SKIPRANDOMALBUM" ]
+        then
+            # We will not play the playlist but skip to the next track:
+            PLAYPLAYLIST=skiprandomalbum
+            if [ "${DEBUG_rfid_trigger_play_sh}" == "TRUE" ]; then echo "  Completed: skip random album" >> $PATHDATA/../logs/debug.log; fi
+ 
         fi
     fi
     # now we check if we are still on for playing what we got passed on:
@@ -477,6 +488,22 @@ if [ ! -z "$FOLDER" -a ! -z ${FOLDER+x} -a -d "${AUDIOFOLDERSPATH}/${FOLDER}" ];
 
         if [ "${DEBUG_rfid_trigger_play_sh}" == "TRUE" ]; then echo "  Command: $PATHDATA/playout_controls.sh -c=playernext" >> $PATHDATA/../logs/debug.log; fi
         $PATHDATA/playout_controls.sh -c=playernext
+    elif [ "$PLAYPLAYLIST" == "skipnextalbum" ]
+    then
+        if [ "${DEBUG_rfid_trigger_play_sh}" == "TRUE" ]; then echo "Skip to the next track in the playlist: \$PLAYPLAYLIST == skipnextalbum"   >> $PATHDATA/../logs/debug.log; fi
+        if [ "${DEBUG_rfid_trigger_play_sh}" == "TRUE" ]; then echo "  VAR FOLDER: $FOLDER"   >> $PATHDATA/../logs/debug.log; fi
+        if [ "${DEBUG_rfid_trigger_play_sh}" == "TRUE" ]; then echo "  VAR PLAYLISTPATH: $PLAYLISTPATH"   >> $PATHDATA/../logs/debug.log; fi
+
+        if [ "${DEBUG_rfid_trigger_play_sh}" == "TRUE" ]; then echo "  Command: $PATHDATA/playout_controls.sh -c=playernextalbum" >> $PATHDATA/../logs/debug.log; fi
+        $PATHDATA/playout_controls.sh -c=playernextalbum
+    elif [ "$PLAYPLAYLIST" == "skiprandomalbum" ]
+    then
+        if [ "${DEBUG_rfid_trigger_play_sh}" == "TRUE" ]; then echo "Skip to the next track in the playlist: \$PLAYPLAYLIST == skiprandomalbum"   >> $PATHDATA/../logs/debug.log; fi
+        if [ "${DEBUG_rfid_trigger_play_sh}" == "TRUE" ]; then echo "  VAR FOLDER: $FOLDER"   >> $PATHDATA/../logs/debug.log; fi
+        if [ "${DEBUG_rfid_trigger_play_sh}" == "TRUE" ]; then echo "  VAR PLAYLISTPATH: $PLAYLISTPATH"   >> $PATHDATA/../logs/debug.log; fi
+
+        if [ "${DEBUG_rfid_trigger_play_sh}" == "TRUE" ]; then echo "  Command: $PATHDATA/playout_controls.sh -c=playerrandomalbum" >> $PATHDATA/../logs/debug.log; fi
+        $PATHDATA/playout_controls.sh -c=playerrandomalbum
     fi
 else
     if [ "${DEBUG_rfid_trigger_play_sh}" == "TRUE" ]; then echo "Path not found $AUDIOFOLDERSPATH/$FOLDER" >> $PATHDATA/../logs/debug.log; fi
